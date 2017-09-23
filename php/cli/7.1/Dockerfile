@@ -49,7 +49,10 @@ ENV LANGUAGE $DOCKER_LOCALE
 
 # Local user
 # -----------------------------------------------------------------------------
-ADD profile /tmp/profile
+RUN mkdir /tmp/profile && \
+    curl -o /tmp/profile/.bashrc_append https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/cli/profile/.bashrc_append && \
+    curl -o /tmp/profile/.gitconfig https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/cli/profile/.gitconfig && \
+    curl -o /tmp/profile/.vimrc_append https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/cli/profile/.vimrc_append
 
 # nb: the 1013 used here for user id and group id is later on replaced by the code in bootstrap.sh...
 RUN addgroup --gid 1013 site && \
@@ -85,7 +88,7 @@ RUN apt-get install -y nodejs
 # Clear archives in apt cache folder
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY bootstrap.sh /root/bootstrap.sh
+RUN curl -o /root/bootstrap.sh https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/cli/php_cli_bootstrap.sh
 RUN chmod 755 /root/bootstrap.sh
 
 WORKDIR /var/www/
