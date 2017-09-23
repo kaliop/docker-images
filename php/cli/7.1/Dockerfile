@@ -1,4 +1,4 @@
-FROM klabs/php71
+FROM klabs/php:7.1
 MAINTAINER Kaliop
 
 LABEL php.version=7.1 \

@@ -1,4 +1,4 @@
-FROM klabs/php54
+FROM klabs/php:5.4
 MAINTAINER Kaliop
 
 LABEL php.version=5.4 \
