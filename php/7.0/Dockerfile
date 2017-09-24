@@ -16,6 +16,7 @@ RUN curl https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
+    curl \
     php7.0 \
     php7.0-readline \
     php7.0-mysql \
@@ -33,6 +34,10 @@ RUN apt-get update && \
 
 # PHP config
 # -----------------------------------------------------------------------------
+# Custom PHP variables
+RUN curl -L -o /etc/php/7.0/cli/conf.d/custom_vars.ini https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/php/custom_vars.ini && \
+    cp /etc/php/7.0/cli/conf.d/custom_vars.ini /etc/php/7.0/apache2/conf.d/custom_vars.ini
+
 # remove default xdebug config
 RUN rm /etc/php/7.0/cli/conf.d/20-xdebug.ini
 RUN rm /etc/php/7.0/apache2/conf.d/20-xdebug.ini

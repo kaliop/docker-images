@@ -17,7 +17,6 @@ RUN echo $DOCKER_TIMEZONE > /etc/timezone; dpkg-reconfigure -f noninteractive tz
 # Mysql client, useful for db dumps and such
 # -----------------------------------------------------------------------------
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    curl \
     wget \
     netcat \
     git \
