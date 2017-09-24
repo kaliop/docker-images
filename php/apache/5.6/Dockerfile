@@ -78,7 +78,7 @@ RUN curl -L -o /etc/apache2/sites-available/000-default.conf https://raw.githubu
     cat /tmp/010-controlpanel.conf >> /etc/apache2/apache2.conf && \
     rm /tmp/010-controlpanel.conf
 
-RUN curl -L -o /tmp/controlpanel.tar.gz https://github.com/kaliop/docker-images/raw/master/build_files/apache/controlpanel.tar.gz && \
+RUN curl -L -o /tmp/controlpanel.tar.gz https://github.com/kaliop/docker-images/raw/master/build_files/controlpanel.tar.gz && \
     tar -zxf /tmp/controlpanel.tar.gz -C /home/site/ && \
     rm /tmp/controlpanel.tar.gz
 
