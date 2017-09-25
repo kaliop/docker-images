@@ -6,7 +6,7 @@ function clean_up {
     # Perform program exit housekeeping
     echo [`date`] Stopping the service
     service nginx stop
-    service php7.1-fpm stop
+    service php-fpm stop
     exit
 }
 
@@ -36,7 +36,7 @@ echo [`date`] Starting the service...
 trap clean_up SIGTERM
 
 service nginx start
-service php7.1-fpm start
+service php-fpm start
 
 echo [`date`] Bootstrap finised
 
