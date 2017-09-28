@@ -19,4 +19,4 @@ fastcgi_param  SCRIPT_FILENAME    $document_root/$fc_script_name;
 fastcgi_index index.php;
 
 # FPM socket
-fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+fastcgi_pass unix:/var/run/php/php-fpm.sock;
