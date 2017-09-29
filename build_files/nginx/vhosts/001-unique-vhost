@@ -11,13 +11,6 @@ server {
     set $_document_root /var/www;
     set $environment $_symfony_env;
 
-    # Custom locations (outside of www root) example
-    #location ~ ^/sitemap.*\.xml {
-    #    root /mnt/wrbm_gb_data/sitemap;
-    #    rewrite "^/sitemap(.*)\.xml" "/$host/sitemap$1.xml" break;
-    #}
-
-
     location / {
 
         root $_document_root;
