@@ -1,6 +1,6 @@
 # Nginx/php 7.0 web server
 
-This container runs the Nginx & php-fpm services.
+This image runs the Nginx & php-fpm services.
 
 Image is built on Debian Jessie.
 
