@@ -1,3 +1,39 @@
+<?php
+
+$serverType='';
+
+if( strpos($_SERVER["SERVER_SOFTWARE"], 'apache') !== false ) {
+    $serverType = 'apache';
+}
+elseif(strpos($_SERVER["SERVER_SOFTWARE"], 'nginx') !== false ) {
+    $serverType = 'nginx';
+}
+
+
+$isMemcached = false;
+
+$memcached = new Memcached;
+$memcached->addServer('memcached',11211);
+
+if($memcached->set("Test", "I found a match, memcached is working")) {
+    $isMemcached = true;
+}
+
+
+function test_host($hostUrl)
+{
+    $exists = false;
+    $headers = get_headers($hostUrl,1);
+
+    if(is_array($headers) && strpos($headers[0],'200') !== false ) {
+        $exists = true;
+    }
+
+    return $exists;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +47,45 @@
     <ul>
         <li><a href="/phpinfo.php">PHP Info</a></li>
         <li><a href="/ocp.php">PHP Opcache Info</a></li>
-        <li><a href="/server-status">Apache Server Status</a></li>
-        <li><a href="/server-info">Apache Server Info</a></li>
+        <?php
+        if( $serverType == 'apache' )
+        {
+            echo '<li><a href="/server-status">Apache Server Status</a></li>
+                <li><a href="/server-info">Apache Server Info</a></li>';
+        }
+        elseif( $serverType == 'nginx' )
+        {
+            echo '<li><a href="/nginx_status">Nginx Server Status</a></li>';
+        }
+        ?>
     </ul>
 
     <h2>Other servers</h2>
     <ul>
-        <li><a href="/memcache/">Memcached Info</a></li>
-        <li><a href="http://admin:pass@localhost:88/phpmemadmin/web/index.php">Memcached Admin</a></li>
-        <li><a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>:8983/solr/">Solr</a></li>
-        <li><a href="/pma/index.php">PhpMyAdmin</a></li>
-        <li><a href="http://varnish:CacheMeIfYouCan@localhost:88/va/html/">Varnish</a></li>
+        <?php
+        if( $isMemcached ) {
+            echo '<li><a href="/memcache/">Memcached Info</a></li>
+                 <li><a href="http://admin:pass@localhost:88/phpmemadmin/web/index.php">Memcached Admin</a></li>';
+        }
+        ?>
+        <?php
+            if(test_host("http://".$_SERVER['SERVER_NAME'].":8983/solr/")) {
+                echo '<li><a href="http://"'.$_SERVER['SERVER_NAME'].'":8983/solr/">Solr</a></li>';
+            }
+        ?>
+
+        <?php
+        if(test_host("http://localhost/pma/index.php")) {
+            echo '<li><a href="/pma/index.php">PhpMyAdmin</a></li>';
+        }
+        ?>
+
+        <?php
+        if(test_host("http://varnish:CacheMeIfYouCan@localhost:88/va/html/")) {
+            echo '<li><a href="http://varnish:CacheMeIfYouCan@localhost:88/va/html/">Varnish</a></li>';
+        }
+        ?>
+
     </ul>
 
     <p>Login & password for Varnish & Memcached Admin are already present in the above links.</p>
