@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# @todo use /bin/sh instead of /bin/bash
+#!/bin/sh
 
 echo [`date`] Bootstrapping the CLI container ...
 
@@ -23,38 +21,22 @@ if [ "$COMPOSER_HTTP_AUTH_DOMAIN" ] && [ "$COMPOSER_HTTP_AUTH_LOGIN" ] && [ "$CO
 	echo '{ "http-basic": { "'$COMPOSER_HTTP_AUTH_DOMAIN'": { "username": "'$COMPOSER_HTTP_AUTH_LOGIN'", "password": "'$COMPOSER_HTTP_AUTH_PASSWORD'" } } }' > /home/site/.composer/auth.json
 fi
 
-# Fix UID & GID for user 'site'
+
+# UID/GID map to unknown user/group, $HOME=/ (the default when no home directory is defined)
 
 echo [`date`] Fixing filesystem permissions...
+eval $( fixuid )
 
-ORIGPASSWD=$(cat /etc/passwd | grep site)
-ORIG_UID=$(echo "$ORIGPASSWD" | cut -f3 -d:)
-ORIG_GID=$(echo "$ORIGPASSWD" | cut -f4 -d:)
-ORIG_HOME=$(echo "$ORIGPASSWD" | cut -f6 -d:)
-DEV_UID=${DEV_UID:=$ORIG_UID}
-DEV_GID=${DEV_GID:=$ORIG_GID}
-
-
-
-if [ "$DEV_UID" -ne "$ORIG_UID" ] || [ "$DEV_GID" -ne "$ORIG_GID" ]; then
-
-    groupmod -g "$DEV_GID" site
-    usermod -u "$DEV_UID" -g "$DEV_GID" site
-
-    chown "${DEV_UID}":"${DEV_GID}" "${ORIG_HOME}"
-    chown -R "${DEV_UID}":"${DEV_GID}" "${ORIG_HOME}"/.*
-
-fi
+# UID/GID now match user/group, $HOME has been set to user's home directory
 
 if [ -d /tmp/cron.d ]; then
 	echo [`date`] Installing crontabs...
 	for user in `ls /tmp/cron.d`; do
-	    crontab -u "$user" "/tmp/cron.d/$user"
+	    sudo crontab -u "$user" "/tmp/cron.d/$user"
 	done
+
+	sudo cron
 fi
-
-cron
-
 
 echo [`date`] Bootstrap finished
 
