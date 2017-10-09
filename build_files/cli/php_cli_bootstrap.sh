@@ -26,8 +26,10 @@ fi
 
 echo [`date`] Fixing filesystem permissions...
 eval $( fixuid )
-# Temporary fix for ~/.ssh/ folder not being chowned by fixuid
-sudo chown site:site ~/.ssh/
+
+# Temporary fix for /home/site/.ssh/ folder not being chowned by fixuid if volumes are mounted in /home/site/
+# See fixuid issue : https://github.com/boxboat/fixuid/issues/2
+sudo chown site:site /home/site/.ssh/
 
 # UID/GID now match user/group, $HOME has been set to user's home directory
 
