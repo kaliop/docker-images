@@ -1,0 +1,120 @@
+### Notes
+#
+# - using the 'build' config instead of 'image' allows to build the stack with just 'docker-compose build'
+# - SYS_PTRACE capability is needed to allow the containers to read /proc/$PID, which is needed by init scripts
+# - The docker-compose 'service' name corresponds to the top-level yml keys
+# - The container name is used in most 'docker' commands (Ex : docker exec -ti kaliop_cli su site)
+#  Keeping a separate container name for each project allows to run many container platforms in parallel
+# - The hostname key is used by Docker internal DNS to reach other containers
+# Ex : the host backend in your Varnish vcl file  must be "web_backend" if your web service hostname is "web_backend"
+#
+version: "3.3"
+services:
+    web:
+        image: klabs/apache:7.1
+        hostname: web
+        container_name: kaliop_web
+        ports:
+            - "82:82"
+            - "88:88"
+        volumes:
+            - "~/www:/var/www:rw"
+        env_file:
+            - .env
+        cap_add:
+            - SYS_PTRACE
+        networks:
+            - dev_stack
+        extra_hosts:
+            - "customer_api:162.242.195.82"
+
+    cli:
+        image: local/php_cli:7.1
+        hostname: cli
+        container_name: kaliop_cli
+        privileged: true
+        user: ${DEV_UID:-1000}:${DEV_GID:-1000}
+        volumes:
+            - "$SSH_AUTH_SOCK:/ssh-agent:ro"
+            - "~/.gitconfig:/home/site/.gitconfig"
+            - "~/.ssh/config:/home/site/.ssh/config:ro"
+            - "~/www:/var/www:rw"
+        environment:
+            - SSH_AUTH_SOCK=/ssh-agent
+        cap_add:
+            - SYS_PTRACE
+        networks:
+            - dev_stack
+
+    varnish:
+        image: klabs/varnish:4.1
+        hostname: varnish
+        container_name: kaliop_varnish
+        ports:
+            - "81:81"
+        cap_add:
+            - SYS_PTRACE
+            # varnish init daemon wants to set ulimits
+            - SYS_RESOURCE
+        security_opt:
+            - apparmor:unconfined
+        networks:
+            - dev_stack
+        depends_on:
+           - web
+           - cli
+
+    solr:
+        image: klabs/solr:ezfind
+        hostname: solr
+        container_name: kaliop_solr
+        ports:
+           - "8983:8983"
+        cap_add:
+           - SYS_PTRACE
+        networks:
+           - dev_stack
+
+    memcached:
+        image: klabs/memcached
+        hostname:  memcached
+        container_name: kaliop_memcached
+        cap_add:
+            - SYS_PTRACE
+        networks:
+            - dev_stack
+
+    mysql:
+        image: klabs/mysql
+        hostname: mysql
+        container_name: kaliop_mysql
+        ports:
+            - "3307:3306"
+        env_file:
+            - docker-compose.env
+        cap_add:
+            - SYS_PTRACE
+        command: ["/root/bootstrap.sh", "mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci"]
+        networks:
+            - dev_stack
+
+    haproxy:
+        image: klabs/haproxy
+        hostname: haproxy
+        container_name: kaliop_haproxy
+        ports:
+          - "80:80"
+        depends_on:
+          - web
+          - varnish
+          - solr
+        networks:
+          - dev_stack
+
+networks:
+    dev_stack:
+        ipam:
+          driver: default
+          config:
+          -
+            subnet: 192.168.0.0/24
