@@ -29,14 +29,14 @@ services:
             - "customer_api:162.242.195.82"
 
     cli:
-        image: local/php_cli:7.1
+        image: klabs/php_cli:7.1
         hostname: cli
         container_name: kaliop_cli
         privileged: true
         user: ${DEV_UID:-1000}:${DEV_GID:-1000}
         volumes:
             - "$SSH_AUTH_SOCK:/ssh-agent:ro"
-            - "~/.gitconfig:/home/site/.gitconfig"
+            - "~/.gitconfig:/home/site/.gitconfig:ro"
             - "~/.ssh/config:/home/site/.ssh/config:ro"
             - "~/www:/var/www:rw"
         environment:
