@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# @todo use /bin/sh instead of /bin/bash
+#!/bin/sh
 
 echo [`date`] Bootstrapping the Web server...
 
@@ -36,24 +34,18 @@ chown -R site:site /var/lock/apache2
 
 echo [`date`] Starting the service
 
-#Load ez5 dynamic vhost (including common config) if files are found
-if [ -f "/etc/apache2/sites-available/001-dynamic-vhost-ez5.conf" ] && [ -f "/etc/apache2/sites-available/ez5-common.conf" ];then
-    a2ensite 001-dynamic-vhost-ez5.conf
-fi
+# Enable all Virtual Hosts with a name starting with '0' found in /etc/apache2/sites-available/
+VHOST_FILES=/etc/apache2/sites-available/0*
+for f in $VHOST_FILES
+do
+	VHOST=`basename $f`
+  a2ensite -q $VHOST
+done
 
-#Load ezplatform dynamic vhost (including common config) if files are found
-if [ -f "/etc/apache2/sites-available/002-dynamic-vhost-ezplatform.conf" ] && [ -f "/etc/apache2/sites-available/ezplatform-common.conf" ];then
-    a2ensite 002-dynamic-vhost-ezplatform.conf
-fi
-
-#Load ez4 dynamic vhost if found
-if [ -f "/etc/apache2/sites-available/003-dynamic-vhost-ez4.conf" ];then
-    a2ensite 003-dynamic-vhost-ez4.conf
-fi
-
-#Load generic dynamic vhost if found
-if [ -f "/etc/apache2/sites-available/004-dynamic-vhost.conf" ];then
-    a2ensite 004-dynamic-vhost.conf
+# Allow other script to be executed at run
+if [ -x "/run/startup.sh" ];then
+    echo "Executing startup script /run/startup.sh ..."
+    /run/startup.sh
 fi
 
 trap clean_up SIGTERM
