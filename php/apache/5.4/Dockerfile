@@ -63,7 +63,8 @@ ENV APACHE_LOCK_DIR /var/lock/apache2
 
 RUN sed -rie 's|export APACHE_RUN_USER=.*|export APACHE_RUN_USER=site|g' /etc/apache2/envvars && \
     sed -rie 's|export APACHE_RUN_GROUP=.*|export APACHE_RUN_GROUP=site|g' /etc/apache2/envvars && \
-    sed -rie 's|export APACHE_LOG_DIR=.*|export APACHE_LOG_DIR=/var/log/apache2|g' /etc/apache2/envvars
+    sed -rie 's|export APACHE_LOG_DIR=.*|export APACHE_LOG_DIR=/var/log/apache2|g' /etc/apache2/envvars && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 RUN rm /etc/apache2/ports.conf && \
     curl -o /etc/apache2/ports.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/ports.conf
