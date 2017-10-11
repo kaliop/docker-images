@@ -1,0 +1,47 @@
+version: "3.3"
+services:
+    web:
+        image: klabs/apache:7.1
+        hostname: web
+        container_name: kaliop_web
+        ports:
+            - "80:80"
+            - "82:82"
+            - "88:88"
+        volumes:
+            - "~/www:/var/www:rw"
+        env_file:
+            - .env
+        cap_add:
+            - SYS_PTRACE
+        networks:
+            - dev_stack
+        extra_hosts:
+            - "customer_api:162.242.195.82"
+
+    cli:
+        image: klabs/php_cli:7.1
+        hostname: cli
+        container_name: kaliop_cli
+        privileged: true
+        user: ${DEV_UID:-1000}:${DEV_GID:-1000}
+        volumes:
+            - "$SSH_AUTH_SOCK:/ssh-agent:ro"
+            - "~/.gitconfig:/home/site/.gitconfig:ro"
+            - "~/.ssh/config:/home/site/.ssh/config:ro"
+            - "~/www:/var/www:rw"
+        environment:
+            - SSH_AUTH_SOCK=/ssh-agent
+        cap_add:
+            - SYS_PTRACE
+        networks:
+            - dev_stack
+
+
+networks:
+    dev_stack:
+        ipam:
+          driver: default
+          config:
+          -
+            subnet: 192.168.0.0/24

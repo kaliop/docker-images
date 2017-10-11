@@ -19,6 +19,7 @@ services:
             - "88:88"
         volumes:
             - "~/www:/var/www:rw"
+            - "./startup.sh:/run/startup.sh:ro"
         env_file:
             - .env
         cap_add:
