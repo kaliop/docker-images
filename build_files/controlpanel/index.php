@@ -2,10 +2,10 @@
 
 $serverType='';
 
-if( strpos($_SERVER["SERVER_SOFTWARE"], 'apache') !== false ) {
+if( strpos(strtolower($_SERVER["SERVER_SOFTWARE"]), 'apache') !== false ) {
     $serverType = 'apache';
 }
-elseif(strpos($_SERVER["SERVER_SOFTWARE"], 'nginx') !== false ) {
+elseif(strpos(strtolower($_SERVER["SERVER_SOFTWARE"]), 'nginx') !== false ) {
     $serverType = 'nginx';
 }
 
@@ -65,12 +65,12 @@ function test_host($hostUrl)
         <?php
         if( $isMemcached ) {
             echo '<li><a href="/memcache/">Memcached Info</a></li>
-                 <li><a href="http://admin:pass@localhost:88/phpmemadmin/web/index.php">Memcached Admin</a></li>';
+                 <li><a href="http://localhost:88/phpmemadmin/web/index.php">Memcached Admin</a></li>';
         }
         ?>
         <?php
-            if(test_host("http://".$_SERVER['SERVER_NAME'].":8983/solr/")) {
-                echo '<li><a href="http://"'.$_SERVER['SERVER_NAME'].'":8983/solr/">Solr</a></li>';
+            if(test_host("http://solr:8983/solr/")) {
+                echo '<li><a href="http://solr:8983/solr/">Solr</a></li>';
             }
         ?>
 
@@ -81,15 +81,13 @@ function test_host($hostUrl)
         ?>
 
         <?php
-        if(test_host("http://varnish:CacheMeIfYouCan@localhost:88/va/html/")) {
-            echo '<li><a href="http://varnish:CacheMeIfYouCan@localhost:88/va/html/">Varnish</a></li>';
+        if(test_host("http://localhost:88/va/html/")) {
+            echo '<li><a href="http://localhost:88/va/html/">Varnish</a></li>';
         }
         ?>
-
     </ul>
 
-    <p>Login & password for Varnish & Memcached Admin are already present in the above links.</p>
-    <p>If needed, here are the credentials: </p>
+    <p>Credentials for Varnish & Memcached Admin : </p>
     <ul>
         <li>Varnish : varnish / CacheMeIfYouCan</li>
         <li>Memcached Admin : admin / pass</li>
