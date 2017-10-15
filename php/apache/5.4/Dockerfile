@@ -66,15 +66,18 @@ RUN sed -rie 's|export APACHE_RUN_USER=.*|export APACHE_RUN_USER=site|g' /etc/ap
     sed -rie 's|export APACHE_LOG_DIR=.*|export APACHE_LOG_DIR=/var/log/apache2|g' /etc/apache2/envvars && \
     echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# For Apache 2.2, we also need to add NameVirtualHost in ports.conf
 RUN rm /etc/apache2/ports.conf && \
-    curl -o /etc/apache2/ports.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/ports.conf
+    curl -o /etc/apache2/ports.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/ports.conf && \
+    sed -i '/Listen 80/i \NameVirtualHost *:80' /etc/apache2/ports.conf && \
+    sed -i '/Listen 82/i \NameVirtualHost *:82' /etc/apache2/ports.conf
 
 RUN a2enmod rewrite headers vhost_alias proxy_http proxy ssl info status
 
 # vhost config
 # -----------------------------------------------------------------------------
 # default & controlpanel
-RUN curl -L -o /etc/apache2/sites-available/000-default.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/010-default.conf && \
+RUN curl -L -o /etc/apache2/sites-available/010-default.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/010-default.conf && \
     curl -L -o /tmp/010-controlpanel.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/010-controlpanel.conf && \
     cat /tmp/010-controlpanel.conf >> /etc/apache2/apache2.conf && \
     rm /tmp/010-controlpanel.conf
@@ -83,16 +86,14 @@ RUN curl -L -o /tmp/controlpanel.tar.gz https://github.com/kaliop/docker-images/
     tar -zxf /tmp/controlpanel.tar.gz -C /home/site/ && \
     rm /tmp/controlpanel.tar.gz
 
-RUN a2ensite 000-default.conf
+RUN  a2dissite 000-default && \
+     a2ensite 010-default.conf
 
 # dynamic vhosts
 # a2ensite is run in bootstrap.sh for these as they could also be mounted as volume at run time
 RUN curl -L -o /etc/apache2/sites-available/001-dynamic-vhost-ez5.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/001-dynamic-vhost-ez5.conf && \
-    curl -L -o /etc/apache2/sites-available/002-dynamic-vhost-ezplatform.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/002-dynamic-vhost-ezplatform.conf && \
     curl -L -o /etc/apache2/sites-available/003-dynamic-vhost-ez4.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/003-dynamic-vhost-ez4.conf && \
-    curl -L -o /etc/apache2/sites-available/004-dynamic-vhost.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/004-dynamic-vhost.conf && \
-    curl -L -o /etc/apache2/sites-available/ez5-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ez5-common.conf && \
-    curl -L -o /etc/apache2/sites-available/ezplatform-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ezplatform-common.conf
+    curl -L -o /etc/apache2/sites-available/ez5-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ez5-common.conf
 
 # Run composer install for phpmemadmin vendors
 RUN cd /home/site/controlpanel/phpmemadmin && \
