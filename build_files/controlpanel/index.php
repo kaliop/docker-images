@@ -81,7 +81,7 @@ function test_host($hostUrl)
         ?>
 
         <?php
-        if(test_host("http://localhost:88/va/html/")) {
+        if(test_host("http://varnish:81")) {
             echo '<li><a href="http://localhost:88/va/html/">Varnish</a></li>';
         }
         ?>
