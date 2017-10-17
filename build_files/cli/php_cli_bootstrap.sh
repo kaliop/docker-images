@@ -10,18 +10,6 @@ function clean_up {
 
 trap clean_up SIGTERM
 
-# Composer config
-if [ "$GITHUB_OAUTH" ]; then
-	echo Bootstraping composer github config
-	echo '{ "config": { "github-oauth": { "github.com": "'$GITHUB_OAUTH'" } } }' > /home/site/.composer/config.json
-fi
-
-if [ "$COMPOSER_HTTP_AUTH_DOMAIN" ] && [ "$COMPOSER_HTTP_AUTH_LOGIN" ] && [ "$COMPOSER_HTTP_AUTH_PASSWORD" ]; then
-	echo Bootstraping composer http-basic auth config
-	echo '{ "http-basic": { "'$COMPOSER_HTTP_AUTH_DOMAIN'": { "username": "'$COMPOSER_HTTP_AUTH_LOGIN'", "password": "'$COMPOSER_HTTP_AUTH_PASSWORD'" } } }' > /home/site/.composer/auth.json
-fi
-
-
 # UID/GID map to unknown user/group, $HOME=/ (the default when no home directory is defined)
 
 echo [`date`] Fixing filesystem permissions...
@@ -32,6 +20,17 @@ eval $( fixuid )
 sudo chown site:site /home/site/.ssh/
 
 # UID/GID now match user/group, $HOME has been set to user's home directory
+
+# Composer config
+if [ "$GITHUB_OAUTH" ]; then
+	echo Bootstraping composer github config
+	echo '{ "config": { "github-oauth": { "github.com": "'$GITHUB_OAUTH'" } } }' > /home/site/.composer/config.json
+fi
+
+if [ "$COMPOSER_HTTP_AUTH_DOMAIN" ] && [ "$COMPOSER_HTTP_AUTH_LOGIN" ] && [ "$COMPOSER_HTTP_AUTH_PASSWORD" ]; then
+	echo Bootstraping composer http-basic auth config
+	echo '{ "http-basic": { "'$COMPOSER_HTTP_AUTH_DOMAIN'": { "username": "'$COMPOSER_HTTP_AUTH_LOGIN'", "password": "'$COMPOSER_HTTP_AUTH_PASSWORD'" } } }' > /home/site/.composer/auth.json
+fi
 
 if [ -d /tmp/cron.d ]; then
 	echo [`date`] Installing crontabs...
