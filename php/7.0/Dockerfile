@@ -5,7 +5,9 @@ LABEL php.version=7.0
 # Base packages
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
-    apt-get install -y curl
+    apt-get install -y \
+    curl \
+    apt-transport-https
 
 # Adding dotdeb repository for PHP 7.0
 # -----------------------------------------------------------------------------

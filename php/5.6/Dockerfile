@@ -6,6 +6,7 @@ LABEL php.version=5.6
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
+    apt-transport-https \
     curl \
     php5 \
     php5-readline \
