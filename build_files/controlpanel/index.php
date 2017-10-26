@@ -70,7 +70,7 @@ function test_host($hostUrl)
         ?>
         <?php
             if(test_host("http://solr:8983/solr/")) {
-                echo '<li><a href="http://solr:8983/solr/">Solr</a></li>';
+                echo '<li><a href="http://localhost:8983/solr/">Solr</a></li>';
             }
         ?>
 
