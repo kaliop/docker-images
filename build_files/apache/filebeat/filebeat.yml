@@ -1,0 +1,21 @@
+### Apache Filebeat configuration ###
+---
+shutdown_timeout: 0
+tags:
+- apache
+- symfony
+fields: {}
+filebeat:
+  spool_size: 2048
+  registry_file: "/var/lib/filebeat/registry"
+  publish_async: false
+  config_dir: "/etc/filebeat/conf.d"
+  shutdown_timeout: 0
+output.logstash:
+ hosts: ["graylog:5044"]
+shipper: {}
+logging: {}
+runoptions: {}
+processors: {}
+
+
