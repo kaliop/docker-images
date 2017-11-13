@@ -1,0 +1,55 @@
+version: '3.3'
+services:
+# Graylog stack
+    mongo:
+      container_name: mongo
+      image: "mongo:3"
+      volumes:
+        - mongo_data:/data/db
+      networks:
+        - dev
+
+    elasticsearch:
+      container_name: elasticsearch
+      hostname: elasticsearch
+      image: docker.elastic.co/elasticsearch/elasticsearch:5.6.2
+      environment:
+        - http.host=0.0.0.0
+        - transport.host=localhost
+        - network.host=0.0.0.0
+        # Disable X-Pack security: https://www.elastic.co/guide/en/elasticsearch/reference/5.5/security-settings.html#general-security-settings
+        - xpack.security.enabled=false
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      networks:
+        - dev
+
+    graylog:
+      container_name: graylog
+      build:
+          context: /home/sbressey/docker/docker-images/graylog
+      environment:
+        GRAYLOG_PASSWORD_SECRET: somepasswordpepper
+        GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+        GRAYLOG_WEB_ENDPOINT_URI: http://127.0.0.1:9000/api
+      depends_on:
+        - mongo
+        - elasticsearch
+      #volumes:
+        #- graylog_journal:/usr/share/graylog/data/journal
+      ports:
+         # Graylog web interface and REST API
+        - 9000:9000
+        # Syslog TCP
+        - 514:514
+        # Syslog UDP
+        - 514:514/udp
+        # GELF TCP
+        - 12201:12201
+        # GELF UDP
+        - 12201:12201/udp
+      networks:
+        - dev
+
+volumes:
+  mongo_data:
+    driver: local
