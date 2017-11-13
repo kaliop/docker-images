@@ -15,7 +15,6 @@ services:
         hostname: web
         container_name: kaliop_web
         ports:
-            - "82:82"
             - "88:88"
         volumes:
             - "~/www:/var/www:rw"
@@ -52,8 +51,6 @@ services:
         image: klabs/varnish:4.1
         hostname: varnish
         container_name: kaliop_varnish
-        ports:
-            - "81:81"
         cap_add:
             - SYS_PTRACE
             # varnish init daemon wants to set ulimits
