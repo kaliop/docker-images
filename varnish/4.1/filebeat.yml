@@ -1,0 +1,21 @@
+shutdown_timeout: 0
+tags:
+- varnish
+fields: {}
+filebeat:
+  spool_size: 2048
+  registry_file: "/var/lib/filebeat/registry"
+  publish_async: false
+  shutdown_timeout: 0
+
+filebeat:
+  prospectors:
+    - input_type: log
+      paths:
+        - /var/log/varnish/varnishncsa.log
+      encoding: plain
+      fields_under_root: false
+      document_type: varnishncsa
+
+output.logstash:
+ hosts: ["graylog:5044"]

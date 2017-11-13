@@ -38,6 +38,17 @@ RUN curl -o /etc/default/varnish https://raw.githubusercontent.com/kaliop/docker
 #User & Password for Varnish Agent
 RUN echo "varnish:CacheMeIfYouCan" > /etc/varnish/agent_secret
 
+# Filebeat
+# -----------------------------------------------------------------------------
+RUN curl -L https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add - && \
+    echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-5.x.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y filebeat
+
+COPY filebeat.yml /etc/filebeat/filebeat.yml
+RUN chmod 644 /etc/filebeat/filebeat.yml
+
+
 RUN curl -o /root/bootstrap.sh https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/varnish/varnish_bootstrap.sh && \
     chmod 755 /root/bootstrap.sh
 

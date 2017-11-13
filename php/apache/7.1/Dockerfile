@@ -16,6 +16,7 @@ RUN echo $DOCKER_TIMEZONE > /etc/timezone; dpkg-reconfigure -f noninteractive tz
 # -----------------------------------------------------------------------------
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     pwgen \
+    netcat \
     sudo \
     nano \
     unzip \
@@ -99,12 +100,27 @@ RUN cd /home/site/controlpanel/phpmemadmin && \
     curl -sS https://getcomposer.org/installer | php -- && \
     php composer.phar install --no-dev --ignore-platform-reqs
 
+# Filebeat
+# -----------------------------------------------------------------------------
+RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add - && \
+    echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-5.x.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y filebeat
+
+RUN mkdir /etc/filebeat/conf.d/ && \
+    curl -L -o /etc/filebeat/filebeat.yml https://raw.githubusercontent.com/kaliop/docker-images/graylog/build_files/apache/filebeat/filebeat.yml && \
+    curl -L -o /etc/filebeat/conf.d/apache_access.yml https://raw.githubusercontent.com/kaliop/docker-images/graylog/build_files/apache/filebeat/conf.d/apache_access.yml && \
+    curl -L -o /etc/filebeat/conf.d/apache_error.yml https://raw.githubusercontent.com/kaliop/docker-images/graylog/build_files/apache/filebeat/conf.d/apache_error.yml && \
+    curl -L -o /etc/filebeat/conf.d/symfony.yml https://raw.githubusercontent.com/kaliop/docker-images/graylog/build_files/apache/filebeat/conf.d/symfony.yml && \
+    chmod 644 /etc/filebeat/filebeat.yml
+
 # Clear archives in apt cache folder
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Get bootstrap script
-RUN curl -o /root/bootstrap.sh https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/apache_bootstrap.sh && \
-    chmod 755 /root/bootstrap.sh
+#RUN curl -o /root/bootstrap.sh https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/apache_bootstrap.sh && \
+COPY apache_bootstrap.sh /root/bootstrap.sh
+RUN  chmod 755 /root/bootstrap.sh
 
 EXPOSE 443
 EXPOSE 80
