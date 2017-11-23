@@ -1,8 +1,5 @@
 
-## CUSTOM environment configuration - added into the container by Docker build
-
-# this one comes from the docker-compose env vars, no need to hardcode it here
-#export SSH_AUTH_SOCK=/ssh-agent
+## CUSTOM Cli environment configuration - added into the container by Docker build
 
 HISTCONTROL=ignoreboth
 
@@ -15,12 +12,45 @@ alias l='ls -CF'
 #bash alias for composer to run composer without memory_limit
 alias composer='php -d memory_limit=-1 /usr/local/bin/composer'
 
+#######################################################
 ######################### ez Publish bash functions
+#######################################################
+
+######################### Symfony/ez platform bash functions
+
+alias sfcacheclear='php app/console cache:clear'
+alias sfasseticdump='php app/console assetic:dump'
+
+######################### ez5 bash functions
 
 alias ez5cacheclear='php ezpublish/console cache:clear'
 alias ez5assetsinstall='php ezpublish/console assets:install --relative --symlink web'
 alias ez5fosjsdump='php ezpublish/console fos:js-routing:dump'
 alias ez5asseticdump='php ezpublish/console assetic:dump'
+alias ez5runlegacyscript='php ezpublish/console ezpublish:legacy:script'
+
+# smart Solr update eZ5 function
+function ez5solrupdate()
+{
+    local nohup_cmd=''
+    local nohup_end=''
+    if [ "$1" = "nohup" ]; then
+        nohup_cmd='nohup'
+        nohup_end='&'
+        shift
+    fi
+    local is_ez5_dir=$(test $(ls -1 -d ezpublish src vendor web 2>/dev/null|wc -l) != 4 && echo false || echo true)
+    if $is_ez5_dir; then
+        echo "Updating eZ5 Solr index: $nohup_cmd php ezpublish/console ezpublish:legacy:script extension/ezfind/bin/php/updatesearchindexsolr.php $@ $nohup_end"
+        eval "$nohup_cmd php ezpublish/console ezpublish:legacy:script extension/ezfind/bin/php/updatesearchindexsolr.php $@ $nohup_end"
+    else
+        echo "No eZ5 instance found"
+    fi
+}
+alias ez5solrupdatenohup='ez5solrupdate nohup'
+
+
+######################### ez4 bash functions
 
 # smart eZ4 cache clear function
 function ez4cacheclear()
@@ -124,27 +154,6 @@ function ez4solrupdate()
     fi
 }
 alias ez4solrupdatenohup='ez4solrupdate nohup'
-
-# smart Solr update eZ5 function
-function ez5solrupdate()
-{
-    local nohup_cmd=''
-    local nohup_end=''
-    if [ "$1" = "nohup" ]; then
-        nohup_cmd='nohup'
-        nohup_end='&'
-        shift
-    fi
-    local is_ez5_dir=$(test $(ls -1 -d ezpublish src vendor web 2>/dev/null|wc -l) != 4 && echo false || echo true)
-    if $is_ez5_dir; then
-        echo "Updating eZ5 Solr index: $nohup_cmd php ezpublish/console ezpublish:legacy:script extension/ezfind/bin/php/updatesearchindexsolr.php $@ $nohup_end"
-        eval "$nohup_cmd php ezpublish/console ezpublish:legacy:script extension/ezfind/bin/php/updatesearchindexsolr.php $@ $nohup_end"
-    else
-        echo "No eZ5 instance found"
-    fi
-}
-alias ez5solrupdatenohup='ez5solrupdate nohup'
-
 
 if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
