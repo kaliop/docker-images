@@ -8,7 +8,7 @@
 # - The hostname key is used by Docker internal DNS to reach other containers
 # Ex : the host backend in your Varnish vcl file  must be "web_backend" if your web service hostname is "web_backend"
 #
-version: "3.3"
+version: "2.2"
 services:
     web:
         image: klabs/apache:7.1
@@ -116,4 +116,4 @@ networks:
           driver: default
           config:
           -
-            subnet: 192.168.0.0/24
+            subnet: 172.17.0.0/24
