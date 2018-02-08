@@ -1,5 +1,5 @@
-#FROM klabs/php:7.2
-FROM local/php:7.2
+FROM klabs/php:7.2
+
 MAINTAINER Kaliop
 LABEL apache.version=2.4 \
       php.version=7.2
