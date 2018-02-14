@@ -10,6 +10,7 @@ acl invalidators {
     "127.0.0.1";
     "web";
     "cli";
+    "172.16.0.0"/15;
 // ACL_INVALIDATOR
 }
 
@@ -18,6 +19,6 @@ acl debuggers {
     "127.0.0.1";
     "web";
     "cli";
-    "172.16.0.0"/20;
+    "172.16.0.0"/15;
 }
 
