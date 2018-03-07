@@ -94,11 +94,6 @@ RUN curl -L -o /etc/apache2/sites-available/001-dynamic-vhost-ez5.conf https://r
     curl -L -o /etc/apache2/sites-available/ez5-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ez5-common.conf && \
     curl -L -o /etc/apache2/sites-available/ezplatform-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ezplatform-common.conf
 
-# Run composer install for phpmemadmin vendors
-RUN cd /home/site/controlpanel/phpmemadmin && \
-    curl -sS https://getcomposer.org/installer | php -- && \
-    php composer.phar install --no-dev --ignore-platform-reqs
-
 # Clear archives in apt cache folder
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
