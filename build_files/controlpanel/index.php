@@ -10,16 +10,6 @@ elseif(strpos(strtolower($_SERVER["SERVER_SOFTWARE"]), 'nginx') !== false ) {
 }
 
 
-$isMemcached = false;
-
-$memcached = new Memcached;
-$memcached->addServer('memcached',11211);
-
-if($memcached->set("Test", "I found a match, memcached is working")) {
-    $isMemcached = true;
-}
-
-
 function test_host($hostUrl)
 {
     $exists = false;
@@ -63,12 +53,6 @@ function test_host($hostUrl)
     <h2>Other servers</h2>
     <ul>
         <?php
-        if( $isMemcached ) {
-            echo '<li><a href="/memcache/">Memcached Info</a></li>
-                 <li><a href="http://localhost:88/phpmemadmin/web/index.php">Memcached Admin</a></li>';
-        }
-        ?>
-        <?php
             if(test_host("http://solr:8983/solr/")) {
                 echo '<li><a href="http://localhost:8983/solr/">Solr</a></li>';
             }
@@ -87,10 +71,9 @@ function test_host($hostUrl)
         ?>
     </ul>
 
-    <p>Credentials for Varnish & Memcached Admin : </p>
+    <p>Credentials for Varnish : </p>
     <ul>
         <li>Varnish : varnish / CacheMeIfYouCan</li>
-        <li>Memcached Admin : admin / pass</li>
     </ul>
 </body>
 </html>
