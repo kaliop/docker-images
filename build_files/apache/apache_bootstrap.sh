@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo [`date`] Bootstrapping the Web server...
 
@@ -41,6 +41,23 @@ do
 	VHOST=`basename $f`
   a2ensite -q $VHOST
 done
+
+# Add custom environment variables in apache envvars if defined
+
+ENV_VARS=('CACHE_POOL' 'CACHE_DSN' 'SYMFONY_CLASSLOADER_FILE' 'SYMFONY_DEBUG' 'SYMFONY_HTTP_CACHE_CLASS')
+
+for ENV_VAR_NAME in "${ENV_VARS[@]}"
+do
+
+	ENV_VAR=$(env | grep ${ENV_VAR_NAME})
+
+	if [ ! -z ${ENV_VAR} ]; then
+    echo "Adding ${ENV_VAR} to apache envvars"
+    echo "export ${ENV_VAR}" >> /etc/apache2/envvars
+	fi
+
+done
+
 
 # Allow other script to be executed at run
 if [ -x "/run/startup.sh" ];then
