@@ -43,21 +43,23 @@ do
 done
 
 # Add custom environment variables in apache envvars if defined
-
 ENV_VARS=('CACHE_POOL' 'CACHE_DSN' 'SYMFONY_CLASSLOADER_FILE' 'SYMFONY_DEBUG' 'SYMFONY_HTTP_CACHE_CLASS')
 
 for ENV_VAR_NAME in "${ENV_VARS[@]}"
 do
-
 	ENV_VAR=$(env | grep ${ENV_VAR_NAME})
 
-	if [ ! -z ${ENV_VAR} ]; then
-    echo "Adding ${ENV_VAR} to apache envvars"
-    echo "export ${ENV_VAR}" >> /etc/apache2/envvars
+	if [ ! -z "${ENV_VAR}" ]; then
+            echo "Adding ${ENV_VAR} to apache envvars"
+            echo "export ${ENV_VAR}" >> /etc/apache2/envvars
 	fi
-
 done
 
+# Add custom environment variables prefixed by "APACHE_" in apache envvars if defined
+env | grep -oP "^APACHE_\K(.+)" | while IFS= read -r line ; do
+    echo "Adding $line to apache envvars"
+    echo "export $line" >> /etc/apache2/envvars
+done
 
 # Allow other script to be executed at run
 if [ -x "/run/startup.sh" ];then
