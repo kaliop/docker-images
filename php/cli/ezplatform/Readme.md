@@ -1,6 +1,6 @@
-# PHP 7.2 CLI Docker image
+# PHP 7.2 CLI Docker image for ezplatform
 
-This is a command-line image that can be used for your projects. All shell commands should be run from here.
+This is a command-line image that can be used for your ezplatform projects. All shell commands should be run from here.
 
 Image is built from Debian jessie.
 
@@ -22,6 +22,8 @@ Git completion and Git prompt are installed in order to make Git usage easier in
 Some useful bash functions are also added. For more information see [https://github.com/kaliop/docker-images/blob/master/build_files/cli/profile/.bashrc_append](https://github.com/kaliop/docker-images/blob/master/build_files/cli/profile/.bashrc_append) 
 
 The default directory is '/var/www/'.
+
+Additional PHP modules are installed for ezplatform compatibility : php7.2-redis & php7.2-apcu.
 
 ## How to run the container
 

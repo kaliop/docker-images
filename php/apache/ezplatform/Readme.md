@@ -1,17 +1,19 @@
-# Apache/php 7.2 web server
+# Apache/php 7.2 web server for ezplatform
 
-Apache web server image to run your PHP project.
+Apache web server image to run your ezplatform project.
 
 Image is built on Debian Jessie.
 
 Available software packages installed are:
 
 * Apache 2.4
-* PHP 7.2
+* PHP 7.1
 * ImageMagick 6.7
 * JAVA (OpenJDK 7)
 * Curl
 * Nano
+
+Additional PHP modules are installed for ezplatform compatibility : php7.2-redis & php7.2-apcu
 
 ## Apache config
 
