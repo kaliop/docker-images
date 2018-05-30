@@ -25,7 +25,7 @@ acl debuggers {
     "192.168.1.0"/24;
     "web";
     "cli";
-    "172.24.0.0"/24; //docker
+    "172.17.0.0"/8; //docker
 }
 
 // Called at the beginning of a request, after the complete request has been received
