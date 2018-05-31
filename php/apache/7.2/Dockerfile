@@ -60,7 +60,7 @@ RUN a2enmod rewrite headers vhost_alias proxy_http proxy ssl info status
 # vhost config
 # -----------------------------------------------------------------------------
 # default & controlpanel
-RUN curl -L -o /etc/apache2/sites-available/000-default.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/010-default.conf && \
+RUN curl -L -o /etc/apache2/sites-available/099-default.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/099-default.conf && \
     curl -L -o /tmp/010-controlpanel.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/010-controlpanel.conf && \
     cat /tmp/010-controlpanel.conf >> /etc/apache2/apache2.conf && \
     rm /tmp/010-controlpanel.conf
@@ -69,14 +69,15 @@ RUN curl -L -o /tmp/controlpanel.tar.gz https://github.com/kaliop/docker-images/
     tar -zxf /tmp/controlpanel.tar.gz -C /home/site/ && \
     rm /tmp/controlpanel.tar.gz
 
-RUN a2ensite 000-default.conf
+RUN a2ensite 099-default.conf
 
 # dynamic vhosts
 # a2ensite is run in bootstrap.sh for these as they could also be mounted as volume at run time
 RUN curl -L -o /etc/apache2/sites-available/001-dynamic-vhost-ez5.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/001-dynamic-vhost-ez5.conf && \
     curl -L -o /etc/apache2/sites-available/002-dynamic-vhost-ezplatform.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/002-dynamic-vhost-ezplatform.conf && \
     curl -L -o /etc/apache2/sites-available/003-dynamic-vhost-ez4.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/003-dynamic-vhost-ez4.conf && \
-    curl -L -o /etc/apache2/sites-available/004-dynamic-vhost.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/004-dynamic-vhost.conf && \
+    curl -L -o /etc/apache2/sites-available/005-dynamic-vhost-wp.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/005-dynamic-vhost-wp.conf && \
+    curl -L -o /etc/apache2/sites-available/098-dynamic-vhost.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/098-dynamic-vhost.conf && \
     curl -L -o /etc/apache2/sites-available/ez5-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ez5-common.conf && \
     curl -L -o /etc/apache2/sites-available/ezplatform-common.conf https://raw.githubusercontent.com/kaliop/docker-images/master/build_files/apache/vhosts/ezplatform-common.conf
 

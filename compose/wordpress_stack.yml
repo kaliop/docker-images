@@ -1,0 +1,33 @@
+version: "2"
+services:
+    web:
+        image: klabs/apache:5.6
+        hostname: web
+        container_name: wp_web
+        ports:
+            - "80:80"
+        volumes:
+            - "~/www:/var/www:rw"
+        env_file:
+            - .env
+        environment:
+            - DEV_UID=${DEV_UID}
+            - DEV_GID=${DEV_GID}
+
+    cli:
+        image: klabs/php_cli:5.6
+        hostname: cli
+        container_name: wp_cli
+        user: ${DEV_UID}:${DEV_GID}
+        volumes:
+            - "$SSH_AUTH_SOCK:/ssh-agent:ro"
+            - "~/.gitconfig:/home/site/.gitconfig:ro"
+            - "~/.ssh/config:/home/site/.ssh/config:ro"
+            - "~/www:/var/www:rw"
+        env_file:
+            - .env
+        environment:
+            - SSH_AUTH_SOCK=/ssh-agent
+            - TERM=xterm-color
+        cap_add:
+            - SYS_PTRACE
