@@ -10,6 +10,7 @@ services:
             - "~/www:/var/www:rw"
         env_file:
             - .env
+            - wordpress.env
         environment:
             - DEV_UID=${DEV_UID}
             - DEV_GID=${DEV_GID}
@@ -26,8 +27,28 @@ services:
             - "~/www:/var/www:rw"
         env_file:
             - .env
+            - wordpress.env
         environment:
             - SSH_AUTH_SOCK=/ssh-agent
             - TERM=xterm-color
         cap_add:
             - SYS_PTRACE
+
+    mysql:
+        image: klabs/mysql
+        hostname: mysql
+        container_name: wp_mysql
+        ports:
+            - "3307:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql/
+        env_file:
+            - mysql.env
+        cap_add:
+            - SYS_PTRACE
+        command: ["/root/bootstrap.sh", "mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci"]
+
+volumes:
+  mysql_data:
+    driver: local
+
