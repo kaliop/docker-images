@@ -12,6 +12,7 @@ RUN apt-get update && \
     ca-certificates \
     wget \
     curl \
+    netcat \
     jpegoptim \
     imagemagick \
     sudo \
