@@ -3,20 +3,35 @@ MAINTAINER Kaliop
 LABEL php.version=7.1
 
 # Base packages
+# Java (used for eg. eZTika indexing)
+# poppler-utils used for pdftotext binary (note that eztika is a much better option!)
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
-    apt-get install -y apt-transport-https ca-certificates wget
+    apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    wget \
+    curl \
+    netcat \
+    jpegoptim \
+    imagemagick \
+    sudo \
+    vim \
+    nano \
+    poppler-utils \
+    openjdk-7-jre-headless \
+    pwgen \
+    locales \
+    unzip
 
 # Adding packages.sury.org repository for PHP 7.1
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list
 
-
 # PHP packages
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
-    curl \
     php7.1 \
     php7.1-readline \
     php7.1-mysql \
