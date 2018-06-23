@@ -10,21 +10,6 @@ ARG DOCKER_LOCALE=fr_FR.UTF-8
 # -----------------------------------------------------------------------------
 RUN echo $DOCKER_TIMEZONE > /etc/timezone; dpkg-reconfigure -f noninteractive tzdata
 
-# Base packages
-# Java (used for eg. eZTika indexing)
-# poppler-utils used for pdftotext binary (note that eztika is a much better option!)
-# -----------------------------------------------------------------------------
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    pwgen \
-    sudo \
-    nano \
-    unzip \
-    locales \
-    imagemagick \
-    jpegoptim \
-    poppler-utils \
-    openjdk-7-jre-headless;
-
 # locale for date, time & currency php functions
 # -----------------------------------------------------------------------------
 RUN dpkg-reconfigure locales && \

@@ -3,11 +3,26 @@ MAINTAINER Kaliop
 LABEL php.version=7.0
 
 # Base packages
+# Java (used for eg. eZTika indexing)
+# poppler-utils used for pdftotext binary (note that eztika is a much better option!)
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    wget \
     curl \
-    apt-transport-https
+    netcat \
+    jpegoptim \
+    imagemagick \
+    sudo \
+    vim \
+    nano \
+    poppler-utils \
+    openjdk-7-jre-headless \
+    pwgen \
+    locales \
+    unzip
 
 # Adding dotdeb repository for PHP 7.0
 # -----------------------------------------------------------------------------
@@ -18,7 +33,6 @@ RUN curl https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
-    curl \
     php7.0 \
     php7.0-readline \
     php7.0-mysql \
