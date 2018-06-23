@@ -3,11 +3,30 @@ MAINTAINER Kaliop
 LABEL php.version=5.4
 
 # Base packages
+# Java (used for eg. eZTika indexing)
+# poppler-utils used for pdftotext binary (note that eztika is a much better option!)
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
     apt-transport-https \
+    ca-certificates \
+    wget \
     curl \
+    netcat \
+    jpegoptim \
+    imagemagick \
+    sudo \
+    vim \
+    nano \
+    poppler-utils \
+    openjdk-7-jre-headless \
+    pwgen \
+    locales \
+    unzip
+
+# PHP packages
+# -----------------------------------------------------------------------------
+RUN apt-get install -y \
     php5 \
 		php5-mysqlnd \
 		php5-json \
