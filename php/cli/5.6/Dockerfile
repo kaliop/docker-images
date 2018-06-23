@@ -11,27 +11,13 @@ ARG DOCKER_LOCALE=fr_FR.UTF-8
 RUN echo $DOCKER_TIMEZONE > /etc/timezone; dpkg-reconfigure -f noninteractive tzdata
 
 # Base packages
-# Java (used for eg. eZTika indexing)
-# poppler-utils used for pdftotext binary (note that eztika is a much better option!)
 # Mysql client, useful for db dumps and such
 # -----------------------------------------------------------------------------
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    wget \
     bash-completion \
-    netcat \
     git \
-    pwgen \
-    locales \
-    sudo \
     cron \
-    unzip \
-    vim \
-    nano \
-    mysql-client \
-    imagemagick \
-    jpegoptim \
-    poppler-utils \
-    openjdk-7-jre-headless
+    mysql-client
 
 # Configure locale for date, time & currency php functions
 # -----------------------------------------------------------------------------
@@ -81,7 +67,7 @@ RUN curl -s -o /home/site/.git-completion.bash https://raw.githubusercontent.com
 # Install fixuid (https://github.com/boxboat/fixuid) to map host user id with container 'site' user id (used in bootstrap.sh)
 RUN USER=site && \
     GROUP=site && \
-    curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.1/fixuid-0.1-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - && \
+    curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - && \
     chown root:root /usr/local/bin/fixuid && \
     chmod 4755 /usr/local/bin/fixuid && \
     mkdir -p /etc/fixuid && \
