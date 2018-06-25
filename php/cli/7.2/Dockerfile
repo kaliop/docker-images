@@ -32,12 +32,6 @@ ENV LC_ALL $DOCKER_LOCALE
 ENV LANG $DOCKER_LOCALE
 ENV LANGUAGE $DOCKER_LOCALE
 
-# Nodejs global install (https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
-# -----------------------------------------------------------------------------
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
-   apt-get install -y nodejs
-
-
 # Composer global install
 # -----------------------------------------------------------------------------
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && \
@@ -66,6 +60,14 @@ RUN curl -s -o /home/site/.git-completion.bash https://raw.githubusercontent.com
     mkdir -p /home/site/.ssh && \
     chown -R site:site /home/site/ && \
     find /tmp/ -type f -name '.*' -maxdepth 1  -delete
+
+# NVM userland install (https://github.com/creationix/nvm#install-script)
+RUN mkdir /home/site/.nvm/ && \
+    export NVM_DIR="/home/site/.nvm" && \
+    export PROFILE="/home/site/.bashrc" && \
+    export NODE_VERSION="8.11.3" && \
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && \
+    chown -R site:site /home/site/.nvm
 
 # Install fixuid (https://github.com/boxboat/fixuid) to map host user id with container 'site' user id (used in bootstrap.sh)
 RUN USER=site && \
