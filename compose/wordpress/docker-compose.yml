@@ -23,7 +23,6 @@ services:
         volumes:
             - "$SSH_AUTH_SOCK:/ssh-agent:ro"
             - "~/.gitconfig:/home/site/.gitconfig:ro"
-            - "~/.ssh/config:/home/site/.ssh/config:ro"
             - "~/www:/var/www:rw"
         env_file:
             - .env
