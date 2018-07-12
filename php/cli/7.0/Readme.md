@@ -2,7 +2,7 @@
 
 This is a command-line image that can be used for your projects. All shell commands should be run from here.
 
-Image is built from Debian jessie.
+Image is built from Debian Stretch.
 
 Available software packages are:
 

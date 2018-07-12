@@ -2,7 +2,7 @@
 
 Apache web server image to run your PHP project.
 
-Image is built on Debian Jessie.
+Image is built on Debian Stretch.
 
 Available software packages installed are:
 

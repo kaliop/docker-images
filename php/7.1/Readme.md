@@ -1,6 +1,6 @@
 # PHP 7.1 Base Docker image
 
-This is the base PHP image used as parent image for apache & cli images, built from Debian Jessie.
+This is the base PHP image used as parent image for apache & cli images, built from Debian Stretch.
 
 PHP 7.1 is installed with support for FPM.
 

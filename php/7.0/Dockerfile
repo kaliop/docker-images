@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER Kaliop
 LABEL php.version=7.0
 
@@ -19,21 +19,23 @@ RUN apt-get update && \
     vim \
     nano \
     poppler-utils \
-    openjdk-7-jre-headless \
+    openjdk-8-jre-headless \
     pwgen \
     locales \
     unzip
 
 # Adding dotdeb repository for PHP 7.0
 # -----------------------------------------------------------------------------
-RUN curl https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
-		echo "deb http://packages.dotdeb.org jessie all" > /etc/apt/sources.list.d/dotdeb.list
+#RUN curl https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://www.dotdeb.org/dotdeb.gpg && \
+		echo "deb http://packages.dotdeb.org stretch all" > /etc/apt/sources.list.d/dotdeb.list
 
 # PHP packages
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
     php7.0 \
+    php7.0-cli \
     php7.0-readline \
     php7.0-mysql \
     php7.0-json \

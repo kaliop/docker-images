@@ -34,6 +34,7 @@ RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 RUN apt-get update && \
     apt-get install -y \
     php7.2 \
+    php7.2-cli \
     php7.2-readline \
     php7.2-mysql \
     php7.2-json \

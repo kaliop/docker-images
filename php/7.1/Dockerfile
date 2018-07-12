@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER Kaliop
 LABEL php.version=7.1
 
@@ -19,20 +19,21 @@ RUN apt-get update && \
     vim \
     nano \
     poppler-utils \
-    openjdk-7-jre-headless \
+    openjdk-8-jre-headless \
     pwgen \
     locales \
     unzip
 
 # Adding packages.sury.org repository for PHP 7.1
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
-    echo "deb https://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list
+    echo "deb https://packages.sury.org/php/ stretch main" > /etc/apt/sources.list.d/php.list
 
 # PHP packages
 # -----------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y \
     php7.1 \
+    php7.1-cli \
     php7.1-readline \
     php7.1-mysql \
     php7.1-json \
