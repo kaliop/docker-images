@@ -23,21 +23,12 @@ RUN dpkg-reconfigure locales && \
 ENV LC_ALL $LOCALE
 ENV LANG $LOCALE
 
-# Create automation user
-RUN addgroup --gid 1000 automation && \
-    adduser --uid 1000 --ingroup automation --home /home/automation --shell /bin/bash --disabled-password --gecos "" automation
-
-USER automation:automation
-
 # Install tools via pip
-RUN pip3 install --user molecule==${MOLECULE_VERSION} && \
-    pip3 install --user ansible==${ANSIBLE_VERSION} && \
-    pip3 install --user docker-py
+RUN pip3 install molecule==${MOLECULE_VERSION} && \
+    pip3 install ansible==${ANSIBLE_VERSION} && \
+    pip3 install docker-py
 
-# Setup userland local PATH & clear home .cache folder
-RUN echo "export PATH=/home/automation/.local/bin/:$PATH" >> /home/automation/.bashrc && \
-    rm -rf /home/automation/.cache/*
-
-WORKDIR /home/automation/
+# clear pip .cache folder
+RUN rm -Rf /root/.cache/pip
 
 CMD ["/bin/bash"]
