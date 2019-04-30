@@ -5,6 +5,7 @@ MAINTAINER Kaliop
 ARG ANSIBLE_VERSION=2.6.7
 ARG MOLECULE_VERSION=2.19.0
 ARG DOCKER_VERSION=18.09.1
+ARG PACKER_VERSION=1.4.0
 ARG LOCALE=fr_FR.UTF-8
 
 RUN apt-get update && \
@@ -12,6 +13,7 @@ RUN apt-get update && \
     locales \
     curl \
     gcc \
+    unzip \
     git
 
 # Clear archives in apt cache folder
@@ -26,7 +28,7 @@ RUN dpkg-reconfigure locales && \
 ENV LC_ALL $LOCALE
 ENV LANG $LOCALE
 
-# Install tools via pip
+# Install ansible & molecule via pip
 RUN pip3 install molecule==${MOLECULE_VERSION} && \
     pip3 install ansible==${ANSIBLE_VERSION} && \
     pip3 install docker-py
@@ -36,6 +38,11 @@ RUN mkdir -p /tmp/download && \
     curl -L https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz | tar -xz -C /tmp/download && \
     mv /tmp/download/docker/docker /usr/local/bin/ && \
     rm -rf /tmp/download
+
+# Install packer
+RUN curl -L -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    unzip /tmp/packer.zip -d /usr/local/bin/ && \
+    rm /tmp/packer.zip
 
 # clear pip .cache folder
 RUN rm -Rf /root/.cache/pip
