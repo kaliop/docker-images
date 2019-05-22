@@ -4,6 +4,7 @@ MAINTAINER Kaliop
 
 ARG ANSIBLE_VERSION=2.8
 ARG MOLECULE_VERSION=2.20.0
+ARG TESTINFRA_VERSION=3.0.4
 ARG DOCKER_VERSION=18.09.1
 ARG PACKER_VERSION=1.4.0
 ARG LOCALE=fr_FR.UTF-8
@@ -28,8 +29,9 @@ RUN dpkg-reconfigure locales && \
 ENV LC_ALL $LOCALE
 ENV LANG $LOCALE
 
-# Install ansible & molecule via pip
+# Install molecule, testinfra & ansible via pip
 RUN pip3 install molecule==${MOLECULE_VERSION} && \
+    pip3 install testinfra==${TESTINFRA_VERSION} && \
     pip3 install ansible==${ANSIBLE_VERSION} && \
     pip3 install docker-py
 
