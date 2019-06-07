@@ -7,6 +7,7 @@ ARG MOLECULE_VERSION=2.20.0
 ARG TESTINFRA_VERSION=3.0.4
 ARG DOCKER_VERSION=18.09.1
 ARG PACKER_VERSION=1.4.0
+ARG DOCKER_COMPOSE_VERSION=1.24.0
 ARG LOCALE=fr_FR.UTF-8
 
 RUN apt-get update && \
@@ -14,6 +15,7 @@ RUN apt-get update && \
     locales \
     curl \
     gcc \
+    jq \
     unzip \
     git
 
@@ -45,6 +47,9 @@ RUN mkdir -p /tmp/download && \
 RUN curl -L -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
     unzip /tmp/packer.zip -d /usr/local/bin/ && \
     rm /tmp/packer.zip
+
+# Install docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 # clear pip .cache folder
 RUN rm -Rf /root/.cache/pip
