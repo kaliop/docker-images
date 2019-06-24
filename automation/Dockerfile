@@ -38,10 +38,10 @@ RUN pip3 install molecule==${MOLECULE_VERSION} && \
     pip3 install docker-py
 
 # Install docker client
-COPY --from=docker /usr/local/bin/docker /home/site/local/bin/docker
+COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 
 # Install packer
-COPY --from=packer /bin/packer /home/site/local/bin/packer
+COPY --from=packer /bin/packer /usr/local/bin/packer
 
 # Install docker-compose
 RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
