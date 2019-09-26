@@ -22,6 +22,7 @@ RUN  apt-get update \
       jq \
       locales \
       wget \
+      linkchecker \
   && rm -f /var/cache/apt/archives/*.deb \
   && rm -rf /var/lib/apt/lists/*
 
