@@ -23,6 +23,7 @@ RUN  apt-get update \
       locales \
       wget \
       linkchecker \
+      python-apt \
   && rm -f /var/cache/apt/archives/*.deb \
   && rm -rf /var/lib/apt/lists/*
 
