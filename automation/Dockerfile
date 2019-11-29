@@ -19,6 +19,7 @@ RUN  apt-get update \
       curl \
       gcc \
       git \
+      zip \
       jq \
       locales \
       wget \
