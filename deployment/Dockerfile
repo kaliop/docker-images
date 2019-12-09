@@ -1,4 +1,4 @@
-FROM debian:9
+FROM debian:buster
 MAINTAINER Kaliop
 
 ENV DEBIAN_FRONTEND noninteractive
