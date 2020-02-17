@@ -4,6 +4,7 @@ This image provides a cli environment with the following tools installed:
 
 - [awscli](https://github.com/aws/aws-cli)
 - [ansible](https://docs.ansible.com/ansible/latest/index.html)
+- [molecule](https://molecule.readthedocs.io/en/latest/)
 - [packer](https://packer.io/)
 - [terraform](https://www.terraform.io/)
 

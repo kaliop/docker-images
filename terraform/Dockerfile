@@ -6,8 +6,12 @@ WORKDIR /app
 
 ARG ANSIBLE_VERSION=2.9.5
 ARG AWSCLI_VERSION=1.18.0
+ARG MOLECULE_VERSION=2.22
 ARG PACKER_VERSION=1.5.4
 ARG TERRAFORM_VERSION=0.12.20
+ARG TESTINFRA_VERSION=4.0.0
+
+ENV LANG=C.UTF-8
 
 RUN  set -x \
   \
@@ -21,6 +25,8 @@ RUN  set -x \
   && apk add --no-cache \
     bash \
     docker-cli \
+    docker-compose \
+    jq \
     libffi \
     openssl \
     openssh-client \
@@ -46,7 +52,9 @@ RUN  set -x \
   && pip3 install -U \
     ansible==${ANSIBLE_VERSION} \
     awscli==${AWSCLI_VERSION} \
+    molecule==${MOLECULE_VERSION} \
     pip \
+    testinfra==${TESTINFRA_VERSION} \
   && rm -rf /root/.cache/pip \
   \
   && echo "alias ll='ls -lhF --color'" >> /etc/profile.d/aliases.sh \
