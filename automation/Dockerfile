@@ -43,6 +43,7 @@ RUN  pip3 install \
       docker-py \
       molecule==${MOLECULE_VERSION} \
       testinfra==${TESTINFRA_VERSION} \
+      ansible-lint flake8 \
   \
   && rm -Rf /root/.cache/pip
 
