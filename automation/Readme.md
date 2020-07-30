@@ -5,8 +5,8 @@ This image provides required tools to execute Ansible playbooks and run automate
 
 Installed packages :
 
-* Python 3.6
+* Python 3.8
 * python3-pip
-* Ansible 2.6.7
-* Molecule 2.19.0
+* Ansible 2.9.7
+* Molecule 3.0.4
 * docker-py
